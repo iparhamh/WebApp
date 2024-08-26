@@ -1,0 +1,72 @@
+﻿@model IEnumerable<WebApplication2.Models.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            @* only show FirstName, LastName and PhoneNumber if user is logged in *@
+            @if (User.Identity.IsAuthenticated) {
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @* only show FirstName, LastName and PhoneNumber if user is logged in *@
+            @if (User.Identity.IsAuthenticated) {
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+            }
+            <td>
+                <button class="btn userTbBtns" onclick="location.href='@Url.Action("Edit", "Users", new {id = item.Id})'">Edit</button> |
+                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                @* Render the Details link only when user is not logged in *@
+                @if (!User.Identity.IsAuthenticated)
+                {
+                        <button class="btn userTbBtns" onclick="location.href='@Url.Action("Details", "Users", new {id = item.Id})'">Details</button>
+                    @* <a asp-action='Details' asp-route-id='@item.Id'>Details</a> *@
+                    WriteLiteral("|");
+                }
+                    <button class="btn userTbBtns delete" onclick="location.href='@Url.Action("Delete", "Users", new {id = item.Id})'">Delete</button>
+                @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
